@@ -1,0 +1,25 @@
+int find(int u){
+        if(u==parent[u]){
+            return u;
+        }
+        return parent[u]=find(parent[u]);
+     }
+     void unions(int a,int b){
+        int a_par=find(a);
+        int b_par=find(b);
+
+        if(a_par!=b_par){
+        if(rank[a_par]>rank[b_par]){
+            parent[b_par]=a_par;
+        }
+        else if(rank[b_par]>rank[a_par]){
+            parent[a_par]=b_par;
+        }
+        else{
+            parent[a_par]=b_par;
+            rank[b_par]++;
+        }
+        }
+     }
+     vector<int>parent;
+     vector<int>rank;

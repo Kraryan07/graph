@@ -1,0 +1,35 @@
+#include<bits/stdc++.h>
+vector<int> dijkstra(vector<vector<int>> &edge, int vertices, int edges, int source)
+{
+    // Write your code here.
+    // 'edge' contains {u, v, distance} vectors.
+    priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>>pq;
+    unordered_map<int,vector<pair<int,int>>>adj;
+    for(auto &e:edge){
+        adj[e[0]].push_back({e[2],e[1]});
+        adj[e[1]].push_back({e[2],e[0]});
+    }
+    pq.push({0,source});
+
+    vector<int>result(vertices,INT_MAX);
+
+    result[source]=0;
+
+    while(!pq.empty()){
+        auto it=pq.top();
+        pq.pop();
+        int d=it.first;
+        int n=it.second;
+
+        for(auto x:adj[n]){
+            int node=x.second;
+            int dist=x.first;
+
+            if(d+dist<result[node]){
+                result[node]=d+dist;
+                pq.push({d+dist,node});
+            }
+        }
+    }
+    return result;
+}

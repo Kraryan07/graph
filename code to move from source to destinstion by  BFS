@@ -1,0 +1,41 @@
+#include <bits/stdc++.h> 
+int findShortestPath(vector<vector<bool>>& mat, 
+                        int sourceX, int sourceY,  
+                        int destX, int destY,  
+                        int n, int m)
+{
+    // Write your code here. 
+    if(n==0||m==0||mat[sourceX][sourceY]!=1||mat[destX][destY]!=1){
+        return -1;
+    }
+    vector<pair<int,int>>index={{1,0},{0,1},{0,-1},{-1,0}};
+    mat[sourceX][sourceY]=0;
+    queue<pair<int,int>>q;
+    q.push({sourceX,sourceY});
+    int level=0;
+    while(!q.empty()){
+        int size=q.size();
+
+        while(size--){
+            auto it=q.front();
+            int x=it.first;
+            int y=it.second;
+              q.pop();
+            if(x==destX && y==destY){
+                return level+1;
+            }
+
+            for(auto &d:index){
+                int newx=x+d.first;
+                int newy=y+d.second;
+
+                if(newx>=0&& newx<n && newy>=0 && newy<m && mat[newx][newy]==1){
+                    mat[newx][newy]=0;
+                    q.push({newx,newy});
+                }
+            }
+        }
+        level++;
+    }
+    return -1;
+}

@@ -1,0 +1,42 @@
+#include <bits/stdc++.h> 
+typedef pair<int,pair<int,int>>P;
+int pathWithMaxMinValue(vector<vector<int>> &arr)
+{
+	// Write your code here.
+  int n=arr.size();
+  int m=arr[0].size();
+
+  priority_queue<P,vector<P>>pq;
+  vector<pair<int,int>>ind={{1,0},{0,1},{-1,0},{0,-1}};
+  vector<vector<int>>vis(n,vector<int>(m,-1));
+   
+  pq.push({arr[0][0],{0,0}});
+
+  while(!pq.empty()){
+
+    auto it=pq.top();
+    pq.pop();
+    int ele=it.first;
+    int x=it.second.first;
+    int y=it.second.second;
+    
+    if(x==(n-1) && y==(m-1)){
+      return ele;
+    }
+
+    for(auto i:ind){
+      int newx=x+i.first;
+      int newy=y+i.second;
+
+      if(newx>=0 && newx<n && newy>=0 && newy<m){
+         int maxval=min(ele,arr[newx][newy]);
+
+         if(maxval>vis[newx][newy]){
+            vis[newx][newy]=maxval;
+            pq.push({maxval,{newx,newy}});
+         }
+      }
+    }
+  }
+  return -1;
+}

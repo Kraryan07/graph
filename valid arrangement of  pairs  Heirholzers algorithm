@@ -1,0 +1,43 @@
+class Solution {
+public:
+ vector<vector<int>> validArrangement(vector<vector<int>>& pairs) {
+         unordered_map<int,vector<int>>adj;
+          unordered_map<int,int>out,ind;
+        for(auto &it:pairs){
+            adj[it[0]].push_back(it[1]);
+            ind[it[1]]++;
+            out[it[0]]++;
+        }
+         int start=pairs[0][0];
+        for(auto &it:adj){
+            int x=it.first;
+            if(out[x]-ind[x]==1){
+                start=x;
+                break;
+            }
+        }
+        vector<vector<int>>ans;
+        vector<int>euler;
+        stack<int>st;
+        st.push(start);
+
+        while(!st.empty()){
+            int curr=st.top();
+            if(!adj[curr].empty()){
+                int ngh=adj[curr].back();
+                adj[curr].pop_back();
+                st.push(ngh);
+            }else{
+                euler.push_back(curr);
+                st.pop();
+            }
+        }
+        reverse(euler.begin(),euler.end());
+        for(int i=0;i<euler.size()-1;i++){
+            ans.push_back({euler[i],euler[i+1]});
+        }
+        // dfs(start,st,adj);
+
+        return ans;
+    }
+};

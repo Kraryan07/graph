@@ -1,0 +1,63 @@
+class Solution {
+public:
+   pair<int,int>BFS(unordered_map<int,vector<int>>adj,int u){
+      queue<int>q;
+      q.push(u);
+      int farthest=u;
+      int dist=0;
+      unordered_map<int,int>vis;
+      while(!q.empty()){
+         int s=q.size();
+
+         while(s--){
+            int node=q.front();
+            q.pop();
+             farthest=node;
+            if(vis[node]) continue;
+            vis[node]=1;
+            for(auto i:adj[node]){
+                 if(!vis[i]){
+                    q.push(i);
+                 }
+            }
+         }
+         if(!q.empty()){
+            dist++;
+         }
+      }
+      return {farthest,dist};
+   }
+   int finddiameter(unordered_map<int,vector<int>>adj){
+     
+     auto [farthest,dist]=BFS(adj,0);
+
+     auto [nextfarthest,diameter]=BFS(adj,farthest);
+
+     return diameter;
+   }
+    unordered_map<int,vector<int>>findadj(vector<vector<int>>& edges1){
+        unordered_map<int,vector<int>>adj;
+
+        for(auto it:edges1){
+            int u=it[0];
+            int v=it[1];
+
+            adj[u].push_back(v);
+            adj[v].push_back(u);
+        }
+        return adj;
+    }
+    int minimumDiameterAfterMerge(vector<vector<int>>& edges1, vector<vector<int>>& edges2) {
+        unordered_map<int,vector<int>>adj1,adj2;
+
+        adj1=findadj(edges1);
+        adj2=findadj(edges2);
+
+        int d1=finddiameter(adj1);
+        int d2=finddiameter(adj2);
+
+        int combinenode=((d1+1)/2)+((d2+1)/2)+1;
+
+        return max({d1,d2,combinenode});
+    }
+};

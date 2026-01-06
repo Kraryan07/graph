@@ -1,0 +1,66 @@
+class Solution {
+public:
+    vector<vector<int>>paths{{1,0},{0,1},{0,-1},{-1,0}};
+    int shortestPathAllKeys(vector<string>& grid) {
+        int n=grid.size();
+        int m=grid[0].size();
+
+        queue<vector<int>>q;
+        int cnt=0;
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                if(grid[i][j]=='@'){
+                    q.push({i,j,0,0});
+                }
+                else if(grid[i][j]>='a' && grid[i][j]<='f'){
+                    // q.push({i,j,0,(1<<grid[i][j]-'a')});
+                    cnt++;
+                }
+            }
+        }
+        int num_of_key=(1<<cnt)-1;
+        // int vis[n][m][num_of_key+1];
+        vector<vector<vector<int>>>vis(n,vector<vector<int>>(m,vector<int>(num_of_key+1,0)));
+        // memset(vis,0,sizeof(vis));
+
+        while(!q.empty()){
+            auto it=q.front();
+            q.pop();
+            int x=it[0];
+            int y=it[1];
+            int steps=it[2];
+            int currsta=it[3];
+            if(currsta==num_of_key){
+                return steps;
+            }
+
+            for(auto &it:paths){
+                int newx=x+it[0];
+                int newy=y+it[1];
+                if(newx>=0 && newx<n && newy>=0 &&newy<m &&grid[newx][newy]!='#'){
+                   char ch=grid[newx][newy];
+                   if(ch>='a' && ch<='z'){
+                      int newsta=currsta|(1<<(ch-'a'));
+                      if(vis[newx][newy][newsta]==0){
+                          vis[newx][newy][newsta]=1;
+                          q.push({newx,newy,steps+1,newsta});
+                      }
+                   }
+                   else if(ch>='A' && ch<='Z'){
+                      if(vis[newx][newy][currsta]==0 && ((currsta>>(ch-'A'))&1)==1){
+                         vis[newx][newy][currsta]=1;
+                         q.push({newx,newy,steps+1,currsta});
+                      }
+                   }
+                   else{
+                      if(vis[newx][newy][currsta]==0){
+                        vis[newx][newy][currsta]=1;
+                        q.push({newx,newy,steps+1,currsta});
+                      }
+                   }
+                }
+            }
+        }
+        return -1;
+    }
+};

@@ -1,0 +1,59 @@
+// User function Template for C++
+class Solution {
+  public:
+  vector<int>parent;
+  vector<int>rank;
+   int find(int x){
+       if(x==parent[x]) return x;
+       
+       return parent[x]=find(parent[x]);
+   }
+   void unions(int x,int y){
+       int par_x=find(x);
+       int par_y=find(y);
+       
+       if(par_x==par_y) return;
+       
+       if(rank[par_x]>rank[par_y]){
+           parent[par_y]=par_x;
+       }
+       else if(rank[par_y]>rank[par_x]){
+           parent[par_x]=par_y;
+       }
+       else{
+           parent[par_y]=par_x;
+           rank[par_x]++;
+       }
+   }
+   int kruskal(vector<vector<int>> &edges){
+       int sum=0;
+       for(auto &it:edges){
+           int u=it[0];
+           int v=it[1];
+           int wt=it[2];
+           
+           int para=find(u);
+           int parb=find(v);
+           
+           if(para!=parb){
+               unions(v,u);
+               sum+=wt;
+           }
+       }
+       return sum;
+   }
+    int kruskalsMST(int V, vector<vector<int>> &edges) {
+        // code here
+        parent.resize(V);
+        rank.resize(V,0);
+        for(int i=0;i<V;i++){
+            parent[i]=i;
+        }
+        auto compo=[&](vector<int>&v1,vector<int>&v2){
+            return v1[2]<v2[2];
+        };
+        sort(edges.begin(),edges.end(),compo);
+        
+        return kruskal(edges);
+    }
+};m
